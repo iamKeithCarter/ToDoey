@@ -12,9 +12,13 @@ class TodoeyTableViewController: UITableViewController {
 
     var itemArray = ["Code IOS", "Code Android"," Build a Website"]
     
+    let defaultskc = UserDefaults.standard
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        
     }
     
     //MARK: Table view data source
@@ -58,6 +62,8 @@ class TodoeyTableViewController: UITableViewController {
             // what happens when user clicks add item
             print(textFieldkc.text!)
             self.itemArray.append(textFieldkc.text!)
+            
+            self.defaultskc.set(self.itemArray, forKey: "TodoListArray")
             
             self.tableView.reloadData()
         }
