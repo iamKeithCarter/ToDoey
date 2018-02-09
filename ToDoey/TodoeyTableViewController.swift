@@ -10,7 +10,7 @@ import UIKit
 
 class TodoeyTableViewController: UITableViewController {
 
-    let itemArray = ["Code IOS", "Code Android"," Build a Website"]
+    var itemArray = ["Code IOS", "Code Android"," Build a Website"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,8 +45,34 @@ class TodoeyTableViewController: UITableViewController {
         
         tableView.deselectRow(at: indexPath, animated: true)
         
-        // resolving commit issues
+        
     }
+    //MARK: Add new items
+    
+    @IBAction func addToList(_ sender: UIBarButtonItem) {
+        var textFieldkc = UITextField()
+        
+        let alertkc = UIAlertController(title: "Add new list item", message: " What's next ", preferredStyle: .alert)
+        
+        let actionkc = UIAlertAction(title: "Add Item", style: .default) { (action) in
+            // what happens when user clicks add item
+            print(textFieldkc.text!)
+            self.itemArray.append(textFieldkc.text!)
+            
+            self.tableView.reloadData()
+        }
+        
+        alertkc.addTextField { (alertTextFieldkc) in
+            alertTextFieldkc.placeholder = "Enter next Item"
+            textFieldkc = alertTextFieldkc
+            
+        }
+        
+       alertkc.addAction(actionkc)
+        
+        present(alertkc,animated: true, completion: nil)
+    }
+    
     
     
 }
