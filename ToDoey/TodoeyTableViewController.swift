@@ -18,7 +18,9 @@ class TodoeyTableViewController: UITableViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        
+        if let itemskc = defaultskc.array(forKey: "TodoListArray") as? [String]{
+            itemArray = itemskc
+        }
     }
     
     //MARK: Table view data source
