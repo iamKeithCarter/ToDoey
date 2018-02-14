@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Itm{
+class Itm: Codable{
     
     var title : String = ""
     var done : Bool = false
