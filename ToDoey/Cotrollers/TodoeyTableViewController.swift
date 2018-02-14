@@ -99,7 +99,7 @@ class TodoeyTableViewController: UITableViewController {
             newItem.title = textFieldkc.text!
             
             self.itemArray.append(newItem)
-            
+            // adding to plist and not user defaults
             self.defaultskc.set(self.itemArray, forKey: "TodoListArray")
             
             self.tableView.reloadData()
