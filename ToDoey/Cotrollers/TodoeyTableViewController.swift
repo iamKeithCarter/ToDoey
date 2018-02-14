@@ -17,6 +17,11 @@ class TodoeyTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let dateFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
+        
+        
+        print(dateFilePath!)
+        
         let newItem = Itm()
         newItem.title = "Find Mike"
         itemArray.append(newItem)
