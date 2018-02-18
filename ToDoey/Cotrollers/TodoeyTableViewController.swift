@@ -9,45 +9,26 @@
 import UIKit
 import CoreData
 
-class TodoeyTableViewController: UITableViewController {
+class TodoeyTableViewController: UITableViewController{
 
     var itemArray = [Itm]()
     
    // let defaultskc = UserDefaults.standard
     
     let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
+    
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        
-        
-       // print(dateFilePath!)
-        
-//        let newItem = Itm()
-//        newItem.title = "Find Mike"
-//        itemArray.append(newItem)
-//        
-//        let newItem2 = Itm()
-//        newItem2.title = "stop Mike"
-//        itemArray.append(newItem2)
-//        
-//        let newItem3 = Itm()
-//        newItem3.title = "capture Mike"
-//        itemArray.append(newItem3)
-        
+
+    
         loadItems()
         
-//        if let itemskc = defaultskc.array(forKey: "TodoListArray") as? [Itm]{
-//            itemArray = itemskc
-//        }
+       
     }
     
     //MARK: Table view data source
-    
-    
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TodoItemCell", for: indexPath)
@@ -59,11 +40,7 @@ class TodoeyTableViewController: UITableViewController {
         
         cell.accessoryType = item.done ? .checkmark : .none
         
-//        if item.done == true {
-//            cell.accessoryType = .checkmark
-//        }else {
-//            cell.accessoryType = .none
-//        }
+
         
         return cell
     }
@@ -79,20 +56,25 @@ class TodoeyTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //print(itemArray[indexPath.row])
         
+        // remove from the array and data base  This and the add remvove a checkmark cannot be part of the same tap. Must create a different field to tap to mark as done or not.  current set up will cause Index out of range.
+//        context.delete(itemArray[indexPath.row])
+//        itemArray.remove(at: indexPath.row)
+        
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
-       
+     
+        //  itemArray[indexPath.row].setValue("Completed  \(itemArray[indexPath.row].title!)", forKey: "title")
         saveItems()
 
         //        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark{ tableView.cellForRow(at: indexPath)?.accessoryType = .none}else{
 //            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
 //        }
         
-        
         tableView.deselectRow(at: indexPath, animated: true)
-        
-        
     }
-    //MARK: Add new items
+    
+    
+    
+    //MARK: Dialog to  Add new items when plus button is pressed
     
     @IBAction func addToList(_ sender: UIBarButtonItem) {
         var textFieldkc = UITextField()
@@ -114,9 +96,8 @@ class TodoeyTableViewController: UITableViewController {
             //self.defaultskc.set(self.itemArray, forKey: "TodoListArray")
             
             self.saveItems()
-            
-            
         }
+        
         
         alertkc.addTextField { (alertTextFieldkc) in
             alertTextFieldkc.placeholder = "Enter next Item"
@@ -142,36 +123,42 @@ class TodoeyTableViewController: UITableViewController {
         self.tableView.reloadData()
     }
     
-    func loadItems() {
-        if let data = try? Data (contentsOf: dataFilePath!){
-            let decoder = PropertyListDecoder()
-            do{
-                itemArray = try decoder.decode([Itm].self, from: data)
-            } catch {
-                print("errors")
-                
-            }
-        
-//        do{
-//            let data = try encoder.encode(
-//                itemArray)
-//            try data.write(to: dataFilePath!)
-//        }catch{
-//            print("Error encoding item array,\(error)")
-//        }
-//        self.tableView.reloadData()
-//    }
-//
-//    func loadItems() {
-//        if let data = try? Data (contentsOf: dataFilePath!){
-//            let decoder = PropertyListDecoder()
-//            do{
-//            itemArray = try decoder.decode([Itm].self, from: data)
-//        } catch {
-//            print("errors")
-//
-//        }
+    func loadItems( with request:NSFetchRequest<Itm> = Itm.fetchRequest()) {
+        // let request : NSFetchRequest<Itm> = Itm.fetchRequest()
+      
+        do{
+        itemArray = try context.fetch(request)
+        }catch {
+            print("fetch error \(error)")
+        }
+    tableView.reloadData()
     }
-    
+
 }
-}
+
+// MARK: Search bar methods
+    extension TodoeyTableViewController : UISearchBarDelegate {
+        func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+            
+           let request : NSFetchRequest<Itm> = Itm.fetchRequest()
+
+            let predicate = NSPredicate(format:"title CONTAINS[cd] %@", searchBar.text!)
+            request.predicate = predicate
+
+           let sortDescriptor = NSSortDescriptor(key:"title", ascending:true)
+            request.sortDescriptors = [sortDescriptor]
+            loadItems(with: request)
+            
+            func searchBar(_ searchBar: UISearchBar, textDidChange: String){
+                if searchBar.text?.count == 0{
+                loadItems()
+                    DispatchQueue.main.async{
+                        searchBar.resignFirstResponder()
+                    }
+                
+                }
+            }
+        }
+    }
+
+
