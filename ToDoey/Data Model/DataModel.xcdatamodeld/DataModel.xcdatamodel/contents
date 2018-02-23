@@ -3,8 +3,15 @@
     <entity name="Itm" representedClassName=".Itm" syncable="YES" codeGenerationType="class">
         <attribute name="done" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="title" attributeType="String" syncable="YES"/>
+        <relationship name="parentCategory" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ListCategory" inverseName="item" inverseEntity="ListCategory" syncable="YES"/>
+    </entity>
+    <entity name="ListCategory" representedClassName="ListCategory" syncable="YES" codeGenerationType="class">
+        <attribute name="attribute1" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="name" attributeType="String" syncable="YES"/>
+        <relationship name="item" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Itm" inverseName="parentCategory" inverseEntity="Itm" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Itm" positionX="-63" positionY="-18" width="128" height="75"/>
+        <element name="Itm" positionX="-63" positionY="-18" width="128" height="88"/>
+        <element name="ListCategory" positionX="-243" positionY="-4" width="128" height="88"/>
     </elements>
 </model>

@@ -149,13 +149,19 @@ class TodoeyTableViewController: UITableViewController{
             request.sortDescriptors = [sortDescriptor]
             loadItems(with: request)
             
-            func searchBar(_ searchBar: UISearchBar, textDidChange: String){
+            
+                //func searchBar(<#T##searchBar: UISearchBar##UISearchBar#>, textDidChange:)
+           
+            func searchBar(searchBar: UISearchBar, textDidChange SearchText: String){
+                print ("This is working")
+                 loadItems()
                 if searchBar.text?.count == 0{
-                loadItems()
+
+
                     DispatchQueue.main.async{
                         searchBar.resignFirstResponder()
                     }
-                
+
                 }
             }
         }
